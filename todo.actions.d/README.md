@@ -15,6 +15,8 @@ When a done task is archived, the content of its note (if any) is appended to an
 * `note edit|e archive|a`. Opens in editor the notes' archive.
 * `note show|s archive|a`. Shows the notes' archive.
 
+The archive file is the only way to acces an archived task's note.
+
 ## Deleted tasks
 
 When a task is deleted, its note (if any) is also also deleted.
