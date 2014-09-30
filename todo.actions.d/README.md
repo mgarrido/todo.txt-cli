@@ -20,3 +20,8 @@ The archive file is the only way to acces an archived task's note.
 ## Deleted tasks
 
 When a task is deleted, its note (if any) is also also deleted.
+
+## Installation
+
+Copy the `archive`, `del` and `rm` files in this directory to your add-ons folder. Be aware that this add-on overrides the `archive`, `del` and `rm` commands. If you already have overriden some of them, you'll need to do some tweaking to combine both versions.
+
