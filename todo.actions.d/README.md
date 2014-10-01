@@ -1,10 +1,10 @@
 # Note add-on for todotxt
 
-This add-on allows to attach a note (just one) to a task.
+This add-on allows to keep notes attached to tasks. Just one note per task is allowed.
 
 ## Adding, viewing and editing notes
 
-* `note add|a ITEM#`. Adds a note to task ITEM#.
+* `note add|a ITEM#`. Adds a new note to task ITEM# and gives the chance to edit it.
 * `note edit|e ITEM#`. Opens the note related with task ITEM# in editor.
 * `note show|s ITEM#`. Shows the note related with task ITEM#.
 
