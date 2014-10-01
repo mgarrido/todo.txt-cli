@@ -92,7 +92,7 @@ case "$TODO_NOTE_ACTION" in
     [ $notename ] && die "TODO: Task $item already has a note."
     
     # Create notes directory if doesn't exist
-    [ -d "$TODO_NOTES_DIR" ]  || mkdir -p "$TODO_NOTES_DIR"
+    [ -d "$TODO_NOTES_DIR" ]  || mkdir -p "$TODO_NOTES_DIR" 2> /dev/null || die "Error: $TODO_NOTES_DIR is not a directory"
 
     # Create file
     filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}${TODO_NOTE_EXT}")
