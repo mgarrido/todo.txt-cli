@@ -54,3 +54,11 @@ Perhaps you want to edit the note to add something else, then `todo.sh note edit
 
 Copy the `archive`, `del` and `rm` files in this directory to your add-ons folder. Be aware that this add-on overrides the `archive`, `del` and `rm` commands. If you already have overriden some of them, you'll need to do some tweaking to combine both versions.
 
+## Configuration
+
+You can change the note file extension by adding an entry to your `todo.cfg` file:
+
+```
+# Note file extension
+export TODO_NOTE_EXT=.md
+```
