@@ -95,13 +95,17 @@ case "$TODO_NOTE_ACTION" in
     [ -d "$TODO_NOTES_DIR" ]  || mkdir -p "$TODO_NOTES_DIR" 2> /dev/null || die "Error: $TODO_NOTES_DIR is not a directory"
 
     # Create file
-    filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}${TODO_NOTE_EXT}")
+    filename=$(mktemp $TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE})
+    mv $filename $filename$TODO_NOTE_EXT
+    filename=$filename$TODO_NOTE_EXT
+
     notename=$(basename "$filename")
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
     echo \# $title > "$TODO_NOTES_DIR/${notename}"
 
     # Append note tag to task
-    sed -i $item" s/$/ ${TODO_NOTE_TAG}:$notename/" "$TODO_FILE"
+    sed -e $item" s/$/ ${TODO_NOTE_TAG}:$notename/" "$TODO_FILE" > $TODO_FILE.tmp
+    mv $TODO_FILE.tmp $TODO_FILE
 
     getTodo "$item"
     echo $item $todo
