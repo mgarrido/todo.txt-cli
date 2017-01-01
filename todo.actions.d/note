@@ -95,8 +95,8 @@ case "$TODO_NOTE_ACTION" in
     [ -d "$TODO_NOTES_DIR" ]  || mkdir -p "$TODO_NOTES_DIR" 2> /dev/null || die "Error: $TODO_NOTES_DIR is not a directory"
 
     # Create file
-    filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}${TODO_NOTE_EXT}")
-    notename=$(basename "$filename")
+    filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}")
+    notename=$(basename "$filename${TODO_NOTE_EXT}")
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
     echo \# $title > "$TODO_NOTES_DIR/${notename}"
 
