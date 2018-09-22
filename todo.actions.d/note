@@ -62,7 +62,7 @@ getnotenamefromtext() {
     #     $notename contains note name, if task has note.
     TODO_NOTE_EXT_GREP=$(literalstringingrepregex "$TODO_NOTE_EXT")
 
-    notename=$(echo "$1" | grep -o "\(^\| \)$TODO_NOTE_TAG:[^ .]*${TODO_NOTE_EXT_GREP}" | grep -o "[^:]*${TODO_NOTE_EXT_GREP}")
+    notename=$(echo "$1" | grep -o "\(^\| \)$TODO_NOTE_TAG:[^ ]*${TODO_NOTE_EXT_GREP}" | grep -o "[^:]*${TODO_NOTE_EXT_GREP}")
 }
 
 testliteralstringingrepregex_nonspecialcharsunchanged()
