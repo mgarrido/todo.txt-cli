@@ -30,6 +30,11 @@ getnotenamefromnumber() {
     getnotenamefromtext "$todo"
 }
 
+testgetnotenamefromtext() {
+    getnotenamefromtext '(B) todo-txt system erneuern role:kvp note:proj-todotxt-system.todo.txt'
+    assertEquals 'proj-todotxt-system.todo.txt' "$notename"
+}
+
 getnotenamefromtext() {
     # Parameters: $1: task text
     # Preconditions: none
