@@ -30,9 +30,9 @@ getnotenamefromnumber() {
     getnotenamefromtext "$todo"
 }
 
-testgetnotenamefromtext_bugXX() {
-    getnotenamefromtext 'text note:oootxtooo.ooo.txt'
-    assertEquals 'oootxtooo.ooo.txt' "$notename"
+testgetnotenamefromtext_multipleext() {
+    getnotenamefromtext 'note:file.todo.txt'
+    assertEquals 'file.todo.txt' "$notename"
 }
 
 testgetnotenamefromtext_trivialexample() {
