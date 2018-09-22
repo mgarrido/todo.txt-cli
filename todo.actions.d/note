@@ -61,7 +61,7 @@ getnotenamefromtext() {
     # Postcondition:
     #     $notename contains note name, if task has note.
 
-    notename=$(echo "$1" | grep -o " $TODO_NOTE_TAG:[^ .]*${TODO_NOTE_EXT}" | grep -o "[^:]*${TODO_NOTE_EXT}")
+    notename=$(echo "$1" | grep -o "\(^\| \)$TODO_NOTE_TAG:[^ .]*${TODO_NOTE_EXT}" | grep -o "[^:]*${TODO_NOTE_EXT}")
 }
 
 editnote() {
