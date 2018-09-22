@@ -30,9 +30,29 @@ getnotenamefromnumber() {
     getnotenamefromtext "$todo"
 }
 
-testgetnotenamefromtext() {
-    getnotenamefromtext '(B) todo-txt system erneuern role:kvp note:proj-todotxt-system.todo.txt'
-    assertEquals 'proj-todotxt-system.todo.txt' "$notename"
+testgetnotenamefromtext_bugXX() {
+    getnotenamefromtext 'text note:oootxtooo.ooo.txt'
+    assertEquals 'oootxtooo.ooo.txt' "$notename"
+}
+
+testgetnotenamefromtext_trivialexample() {
+    getnotenamefromtext 'before note:file.txt after'
+    assertEquals 'file.txt' "$notename"
+}
+
+testgetnotenamefromtext_notextbefore() {
+    getnotenamefromtext 'note:file.txt after'
+    assertEquals 'file.txt' "$notename"
+}
+
+testgetnotenamefromtext_notextafter() {
+    getnotenamefromtext 'before note:file.txt'
+    assertEquals 'file.txt' "$notename"
+}
+
+testgetnotenamefromtext_notext() {
+    getnotenamefromtext 'note:file.txt'
+    assertEquals 'file.txt' "$notename"
 }
 
 getnotenamefromtext() {
