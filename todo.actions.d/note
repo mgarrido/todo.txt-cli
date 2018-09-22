@@ -143,6 +143,10 @@ case "$TODO_NOTE_ACTION" in
     rm -f "$TODO_NOTES_DIR/$notename"
     ;;
 
+"__test")
+    . shunit2
+    ;;
+
 *)
     usage
     ;;
