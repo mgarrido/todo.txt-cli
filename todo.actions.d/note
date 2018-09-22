@@ -79,7 +79,7 @@ testliteralstringingrepregex_specialcharsprefixedbybackslash()
 }
 
 literalstringingrepregex() {
-    echo "$1"
+    sed 's/[].\\[$]/\\\0/g' <<< "$1"
 }
 
 testliteralstringingrepregex_commonexample()
