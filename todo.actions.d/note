@@ -4,7 +4,8 @@ TODO_NOTES_DIR=$TODO_DIR/notes
 TODO_NOTE_TAG="note"
 TODO_NOTE_TEMPLATE="XXX"
 TODO_NOTE_EXT=${TODO_NOTE_EXT:-.txt}
-TODO_NOTE_ARCHIVE="$TODO_NOTES_DIR/archive$TODO_NOTE_EXT"
+TODO_NOTE_AUTOEXT=${TODO_NOTE_AUTOEXT:-}
+TODO_NOTE_ARCHIVE="$TODO_NOTES_DIR/archive${TODO_NOTE_EXT}${TODO_NOTE_AUTOEXT}"
 
 usage() {
     echo "    $(basename $0) add|a ITEM#"
@@ -28,6 +29,16 @@ getnotenamefromnumber() {
 
     getTodo "$item"
     getnotenamefromtext "$todo"
+}
+
+testgetnotenamefromtext_with_auto_ext() {
+    tmp_old_AUTOEXT="$TODO_NOTE_AUTOEXT"
+    TODO_NOTE_AUTOEXT='.bak'
+
+    getnotenamefromtext 'note:file.txt'
+
+    assertEquals 'file.txt.bak' "$notename"
+    TODO_NOTE_AUTOEXT="$tmp_old_AUTOEXT"
 }
 
 testgetnotenamefromtext_multipleext() {
@@ -62,7 +73,7 @@ getnotenamefromtext() {
     #     $notename contains note name, if task has note.
     TODO_NOTE_EXT_GREP=$(literalstringingrepregex "$TODO_NOTE_EXT")
 
-    notename=$(echo "$1" | grep -o "\(^\| \)$TODO_NOTE_TAG:[^ ]*${TODO_NOTE_EXT_GREP}" | grep -o "[^:]*${TODO_NOTE_EXT_GREP}")
+    notename=$(echo "$1" | grep -o "\(^\| \)$TODO_NOTE_TAG:[^ ]*${TODO_NOTE_EXT_GREP}" | grep -o "[^:]*${TODO_NOTE_EXT_GREP}")$TODO_NOTE_AUTOEXT
 }
 
 testliteralstringingrepregex_nonspecialcharsunchanged()
@@ -143,7 +154,7 @@ case "$TODO_NOTE_ACTION" in
     [ -d "$TODO_NOTES_DIR" ]  || mkdir -p "$TODO_NOTES_DIR" 2> /dev/null || die "Error: $TODO_NOTES_DIR is not a directory"
 
     # Create file
-    filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}${TODO_NOTE_EXT}")
+    filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}${TODO_NOTE_EXT}${TODO_NOTE_AUTOEXT}")
     notename=$(basename "$filename")
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
     echo \# $title > "$TODO_NOTES_DIR/${notename}"
