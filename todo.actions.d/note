@@ -41,6 +41,16 @@ testgetnotenamefromtext_with_autoext() {
     TODO_NOTE_AUTOEXT="$tmp_old_AUTOEXT"
 }
 
+testgetnotenamefromtext_with_autoext_nonote() {
+    tmp_old_AUTOEXT="$TODO_NOTE_AUTOEXT"
+    TODO_NOTE_AUTOEXT='.bak'
+
+    getnotenamefromtext 'A todo item without a note'
+
+    assertEquals '' "$notename"
+    TODO_NOTE_AUTOEXT="$tmp_old_AUTOEXT"
+}
+
 testgetnotenamefromtext_with_empty_ext() {
     tmp_old_EXT="$TODO_NOTE_EXT"
     TODO_NOTE_EXT=''
