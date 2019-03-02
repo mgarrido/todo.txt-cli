@@ -31,7 +31,7 @@ getnotenamefromnumber() {
     getnotenamefromtext "$todo"
 }
 
-testgetnotenamefromtext_with_auto_ext() {
+testgetnotenamefromtext_with_autoext() {
     tmp_old_AUTOEXT="$TODO_NOTE_AUTOEXT"
     TODO_NOTE_AUTOEXT='.bak'
 
@@ -39,6 +39,16 @@ testgetnotenamefromtext_with_auto_ext() {
 
     assertEquals 'file.txt.bak' "$notename"
     TODO_NOTE_AUTOEXT="$tmp_old_AUTOEXT"
+}
+
+testgetnotenamefromtext_with_empty_ext() {
+    tmp_old_EXT="$TODO_NOTE_EXT"
+    TODO_NOTE_EXT=''
+
+    getnotenamefromtext 'note:file'
+
+    assertEquals 'file' "$notename"
+    TODO_NOTE_EXT="$tmp_old_EXT"
 }
 
 testgetnotenamefromtext_multipleext() {
@@ -79,6 +89,12 @@ getnotenamefromtext() {
 testliteralstringingrepregex_nonspecialcharsunchanged()
 {
     nospecialchars="abcde"
+    assertEquals "$nospecialchars" "$(literalstringingrepregex "$nospecialchars")"
+}
+
+testliteralstringingrepregex_onemptystring()
+{
+    nospecialchars=""
     assertEquals "$nospecialchars" "$(literalstringingrepregex "$nospecialchars")"
 }
 
