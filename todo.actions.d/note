@@ -185,9 +185,10 @@ case "$TODO_NOTE_ACTION" in
 
     # Create file
     filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}")
-    notename=$(basename "$filename${TODO_NOTE_EXT}${TODO_NOTE_AUTOEXT}")
+    notename=$(basename "$filename${TODO_NOTE_EXT}")
+    notefile="${notename}${TODO_NOTE_AUTOEXT}"
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
-    echo \# $title > "$TODO_NOTES_DIR/${notename}"
+    echo \# $title > "$TODO_NOTES_DIR/${notefile}"
 
     # Append note tag to task
     sed -i.bak $item" s/$/ ${TODO_NOTE_TAG}:$notename/" "$TODO_FILE"
@@ -200,7 +201,7 @@ case "$TODO_NOTE_ACTION" in
     read ANSWER
     if [ "$ANSWER" = "y" ]
     then
-        editnote "$TODO_NOTES_DIR/${notename}"
+        editnote "$TODO_NOTES_DIR/${notefile}"
     fi
     ;;
 
