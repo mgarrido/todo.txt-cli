@@ -3,8 +3,9 @@
 TODO_NOTES_DIR=${TODO_NOTES_DIR:-$TODO_DIR/notes}
 TODO_NOTE_TAG=${TODO_NOTE_TAG:-note}
 TODO_NOTE_TEMPLATE=${TODO_NOTE_TEMPLATE:-XXX}
-TODO_NOTE_EXT=${TODO_NOTE_EXT:-.txt}
-TODO_NOTE_ARCHIVE="$TODO_NOTES_DIR/archive$TODO_NOTE_EXT"
+TODO_NOTE_EXT=${TODO_NOTE_EXT-.txt}
+TODO_NOTE_AUTOEXT=${TODO_NOTE_AUTOEXT-}
+TODO_NOTE_ARCHIVE="$TODO_NOTES_DIR/archive${TODO_NOTE_EXT}${TODO_NOTE_AUTOEXT}"
 
 usage() {
     echo "    $(basename $0) add|a ITEM#"
@@ -30,13 +31,101 @@ getnotenamefromnumber() {
     getnotenamefromtext "$todo"
 }
 
+testgetnotenamefromtext_with_autoext() {
+    tmp_old_AUTOEXT="$TODO_NOTE_AUTOEXT"
+    TODO_NOTE_AUTOEXT='.bak'
+
+    getnotenamefromtext 'note:file.txt'
+
+    assertEquals 'file.txt.bak' "$notename"
+    TODO_NOTE_AUTOEXT="$tmp_old_AUTOEXT"
+}
+
+testgetnotenamefromtext_with_autoext_nonote() {
+    tmp_old_AUTOEXT="$TODO_NOTE_AUTOEXT"
+    TODO_NOTE_AUTOEXT='.bak'
+
+    getnotenamefromtext 'A todo item without a note'
+
+    assertEquals '' "$notename"
+    TODO_NOTE_AUTOEXT="$tmp_old_AUTOEXT"
+}
+
+testgetnotenamefromtext_with_empty_ext() {
+    tmp_old_EXT="$TODO_NOTE_EXT"
+    TODO_NOTE_EXT=''
+
+    getnotenamefromtext 'note:file'
+
+    assertEquals 'file' "$notename"
+    TODO_NOTE_EXT="$tmp_old_EXT"
+}
+
+testgetnotenamefromtext_multipleext() {
+    getnotenamefromtext 'note:file.todo.txt'
+    assertEquals 'file.todo.txt' "$notename"
+}
+
+testgetnotenamefromtext_trivialexample() {
+    getnotenamefromtext 'before note:file.txt after'
+    assertEquals 'file.txt' "$notename"
+}
+
+testgetnotenamefromtext_notextbefore() {
+    getnotenamefromtext 'note:file.txt after'
+    assertEquals 'file.txt' "$notename"
+}
+
+testgetnotenamefromtext_notextafter() {
+    getnotenamefromtext 'before note:file.txt'
+    assertEquals 'file.txt' "$notename"
+}
+
+testgetnotenamefromtext_notext() {
+    getnotenamefromtext 'note:file.txt'
+    assertEquals 'file.txt' "$notename"
+}
+
 getnotenamefromtext() {
     # Parameters: $1: task text
     # Preconditions: none
     # Postcondition:
     #     $notename contains note name, if task has note.
+    TODO_NOTE_EXT_GREP=$(literalstringingrepregex "$TODO_NOTE_EXT")
 
-    notename=$(echo "$1" | grep -o " $TODO_NOTE_TAG:[^ .]*${TODO_NOTE_EXT}" | grep -o "[^:]*${TODO_NOTE_EXT}")
+    if [[ "$1" =~ (^| )$TODO_NOTE_TAG:([^ ]*${TODO_NOTE_EXT_GREP}) ]]; then
+        notename=${BASH_REMATCH[2]}${TODO_NOTE_AUTOEXT}
+    else
+        notename=""
+    fi
+}
+
+testliteralstringingrepregex_nonspecialcharsunchanged()
+{
+    nospecialchars="abcde"
+    assertEquals "$nospecialchars" "$(literalstringingrepregex "$nospecialchars")"
+}
+
+testliteralstringingrepregex_onemptystring()
+{
+    nospecialchars=""
+    assertEquals "$nospecialchars" "$(literalstringingrepregex "$nospecialchars")"
+}
+
+testliteralstringingrepregex_specialcharsprefixedbybackslash()
+{
+    for char in "\\" '.' '[' ']' '$'; do
+        assertEquals "\\$char" "$(literalstringingrepregex "$char")"
+    done
+}
+
+literalstringingrepregex() {
+    sed 's/[].\\[$]/\\\0/g' <<< "$1"
+}
+
+testliteralstringingrepregex_commonexample()
+{
+    assertEquals '\.txt' "$(literalstringingrepregex '.txt')"
 }
 
 editnote() {
@@ -97,8 +186,9 @@ case "$TODO_NOTE_ACTION" in
     # Create file
     filename=$(mktemp "$TODO_NOTES_DIR/${TODO_NOTE_TEMPLATE}")
     notename=$(basename "$filename${TODO_NOTE_EXT}")
+    notefile="${notename}${TODO_NOTE_AUTOEXT}"
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
-    echo \# $title > "$TODO_NOTES_DIR/${notename}"
+    echo \# $title > "$TODO_NOTES_DIR/${notefile}"
 
     # Append note tag to task
     sed -i.bak $item" s/$/ ${TODO_NOTE_TAG}:$notename/" "$TODO_FILE"
@@ -111,7 +201,7 @@ case "$TODO_NOTE_ACTION" in
     read ANSWER
     if [ "$ANSWER" = "y" ]
     then
-        editnote "$TODO_NOTES_DIR/${notename}"
+        editnote "$TODO_NOTES_DIR/${notefile}"
     fi
     ;;
 
@@ -141,6 +231,10 @@ case "$TODO_NOTE_ACTION" in
 "__rmfromtext")
     getnotenamefromtext "$*"
     rm -f "$TODO_NOTES_DIR/$notename"
+    ;;
+
+"__test")
+    . shunit2
     ;;
 
 *)
