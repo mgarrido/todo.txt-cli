@@ -56,9 +56,10 @@ Copy the `archive`, `del` and `rm` files in this directory to your add-ons folde
 
 ## Configuration
 
-You can change the note file extension by adding an entry to your `todo.cfg` file:
+You can change the note file extension or pager used for showing notes by adding an entry to your `todo.cfg` file:
 
 ```
 # Note file extension
 export TODO_NOTE_EXT=.md
+export TODO_NOTE_PAGER=less
 ```
