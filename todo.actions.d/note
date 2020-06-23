@@ -5,6 +5,7 @@ TODO_NOTE_TAG=${TODO_NOTE_TAG:-note}
 TODO_NOTE_TEMPLATE=${TODO_NOTE_TEMPLATE:-XXX}
 TODO_NOTE_EXT=${TODO_NOTE_EXT:-.txt}
 TODO_NOTE_ARCHIVE="$TODO_NOTES_DIR/archive$TODO_NOTE_EXT"
+TODO_NOTE_PAGER=${TODO_NOTE_PAGER:-cat}
 
 usage() {
     echo "    $(basename $0) add|a ITEM#"
@@ -124,7 +125,7 @@ case "$TODO_NOTE_ACTION" in
 "show" | "s")
     errmsg="usage: $TODO_SH $(basename $0) show|s ITEM#|archive|a"
     getnotefilepath $*
-    cat "$notefilepath"
+    $TODO_NOTE_PAGER "$notefilepath"
     ;;
 
 "__archive")
