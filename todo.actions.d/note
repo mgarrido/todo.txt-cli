@@ -103,10 +103,9 @@ case "$TODO_NOTE_ACTION" in
     rm -f "${filename}"
 
     # Append note tag to task
-    sed -i.bak $item" s/$/ ${TODO_NOTE_TAG}:$notename/" "$TODO_FILE"
+    "$TODO_SH" command append "$item" "${TODO_NOTE_TAG}:$notename"
 
     getTodo "$item"
-    echo $item $todo
     echo TODO: Note added to task $item.
 
     echo "Edit note?  (y/n)"
