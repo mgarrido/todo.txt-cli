@@ -99,6 +99,8 @@ case "$TODO_NOTE_ACTION" in
     notename=$(basename "$filename${TODO_NOTE_EXT}")
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
     echo \# $title > "$TODO_NOTES_DIR/${notename}"
+    # remove temp file created
+    rm -f "${filename}"
 
     # Append note tag to task
     sed -i.bak $item" s/$/ ${TODO_NOTE_TAG}:$notename/" "$TODO_FILE"
